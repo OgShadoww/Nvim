@@ -14,7 +14,6 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- 👇 це критично!
 require("lazy").setup("plugins")
 
 vim.keymap.set('i', 'jj', '<Esc>', { noremap = true, silent = true })
@@ -40,7 +39,7 @@ vim.opt.timeoutlen = 300
 vim.opt.scrolloff = 8  -- Завжди мати 8 рядків зверху і знизу
 
 -- Встановити кольорову тему
-vim.cmd("colorscheme oxocarbon")
+--vim.cmd("colorscheme oxocarbon")
 
 -- Увімкнути clipboard для копіювання з системним буфером
 vim.opt.clipboard = "unnamedplus"
@@ -58,3 +57,4 @@ require("config.nvimtree")
 require("config.treesitter")
 require("config.cmp")
 require("config.lsp")
+require("config.theme")

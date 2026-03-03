@@ -1,32 +1,83 @@
-local lspconfig = require('lspconfig')
 
--- Для C/C++
-lspconfig.clangd.setup {}
+return {
+  "neovim/nvim-lspconfig",
+  dependencies = { "williamboman/mason.nvim", "williamboman/mason-lspconfig.nvim" },
+  config = function()
+    require("mason").setup()
 
--- HTML
-lspconfig.html.setup({})
+    require("mason-lspconfig").setup({
+      ensure_installed = {
+        "lua_ls",
+        "clangd",
+        "html",
+        "cssls",
+        "tailwindcss",
+        "emmet_ls",
+        "basedpyright",
+        "ruff",
+        -- NOTE: TS server name differs by lspconfig versions:
+        -- "tsserver" OR "ts_ls"
+      },
+    })
 
--- CSS
-lspconfig.cssls.setup({})
+    local lspconfig = require("lspconfig")
 
--- TailwindCSS
-lspconfig.tailwindcss.setup({})
+    -- (nice) capabilities for cmp
+    local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
--- Emmet (для HTML, JSX, шаблонів)
-lspconfig.emmet_ls.setup({
-  filetypes = {
-    "html", "css", "javascript", "javascriptreact",
-    "typescriptreact", "svelte", "vue"
-  },
-})
+    -- Lua
+    lspconfig.lua_ls.setup({
+      capabilities = capabilities,
+      settings = { Lua = { diagnostics = { globals = { "vim" } } } },
+    })
 
--- Для Lua (щоб не сварився на Neovim API)
-lspconfig.lua_ls.setup {
-  settings = {
-    Lua = {
-      diagnostics = {
-        globals = { 'vim' }
-      }
-    }
-  }
+    -- C/C++
+    lspconfig.clangd.setup({
+      capabilities = capabilities,
+      -- you can add args here if needed
+      -- cmd = { "clangd", "--background-index" },
+    })
+
+    -- Python
+    lspconfig.ruff.setup({
+      capabilities = capabilities,
+      on_attach = function(client)
+        client.server_capabilities.documentFormattingProvider = false
+      end,
+    })
+
+    lspconfig.basedpyright.setup({
+      capabilities = capabilities,
+      settings = {
+        python = {
+          analysis = {
+            typeCheckingMode = "basic",
+            autoImportCompletions = true,
+            diagnosticMode = "openFilesOnly",
+          },
+        },
+      },
+    })
+
+    -- Web
+    lspconfig.html.setup({ capabilities = capabilities })
+    lspconfig.cssls.setup({ capabilities = capabilities })
+    lspconfig.tailwindcss.setup({ capabilities = capabilities })
+
+    lspconfig.emmet_ls.setup({
+      capabilities = capabilities,
+      filetypes = {
+        "html","css","javascript","javascriptreact",
+        "typescriptreact","svelte","vue"
+      },
+    })
+
+    -- TypeScript (compat with both names)
+    if lspconfig.ts_ls then
+      lspconfig.ts_ls.setup({ capabilities = capabilities })
+    else
+      lspconfig.tsserver.setup({ capabilities = capabilities })
+    end
+  end,
 }
+

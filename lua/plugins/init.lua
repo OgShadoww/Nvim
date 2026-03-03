@@ -9,9 +9,11 @@ return {
   { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
 
   -- 🎨 Теми
-  { "folke/tokyonight.nvim" }, -- можеш видалити, якщо не хочеш тримати
-  { "projekt0n/github-nvim-theme" }, -- <-- ✅ GitHub Dark тема, яку ти хочеш
-  { "nyoom-engineering/oxocarbon.nvim" },
+  --{ "projekt0n/github-nvim-theme" },
+  --{ "nyoom-engineering/oxocarbon.nvim" },
+  { "folke/tokyonight.nvim", lazy = false, priority = 1000 },
+  { "rebelot/kanagawa.nvim", lazy = false, priority = 1000 },
+  { "rose-pine/neovim", name = "rose-pine", lazy = false, priority = 1000 },
 
   -- 🔍 Telescope
   { "nvim-telescope/telescope.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
@@ -53,6 +55,8 @@ return {
           "html",
           "cssls",
           "ts_ls",
+          "basedpyright",
+          "ruff",
           "emmet_ls",
           "tailwindcss"
         }
