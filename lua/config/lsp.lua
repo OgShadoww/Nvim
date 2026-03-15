@@ -1,4 +1,3 @@
-
 return {
   "neovim/nvim-lspconfig",
   dependencies = { "williamboman/mason.nvim", "williamboman/mason-lspconfig.nvim" },
@@ -9,14 +8,17 @@ return {
       ensure_installed = {
         "lua_ls",
         "clangd",
+        "codelldb",
         "html",
         "cssls",
         "tailwindcss",
         "emmet_ls",
         "basedpyright",
         "ruff",
-        -- NOTE: TS server name differs by lspconfig versions:
-        -- "tsserver" OR "ts_ls"
+        "zls",
+        "marksman",
+        "gopls",
+        "asm-lsp"
       },
     })
 
@@ -38,6 +40,12 @@ return {
       -- cmd = { "clangd", "--background-index" },
     })
 
+    -- Asm
+    lspconfig.asm_lsp.setup({
+      capabilities = capabilities,
+      filetypes = { "asm", "s", "S" },
+    })
+
     -- Python
     lspconfig.ruff.setup({
       capabilities = capabilities,
@@ -45,6 +53,22 @@ return {
         client.server_capabilities.documentFormattingProvider = false
       end,
     })
+
+    -- Zig
+    lspconfig.zls.setup({
+      capabilities = capabilities,
+    })
+
+     lspconfig.gopls.setup({
+      capabilities = capabilities,
+    })
+
+    -- Markdown
+    lspconfig.marksman.setup({
+      capabilities = capabilities,
+    })
+
+    lspconfig.codelldb.setup({})
 
     lspconfig.basedpyright.setup({
       capabilities = capabilities,
